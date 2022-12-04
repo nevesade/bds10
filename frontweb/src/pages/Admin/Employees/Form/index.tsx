@@ -10,6 +10,13 @@ import './styles.css';
 
 const Form = () => {
 
+  
+const [selectDepartments, SetDepartments] = useState<Department[]>([]);
+
+
+
+
+
   const {
     register,
     handleSubmit,
@@ -20,6 +27,21 @@ const Form = () => {
   const history = useHistory();
 
   
+  useEffect(() => {
+    const params : AxiosRequestConfig = {
+      url: '/departments',
+      withCredentials: true,
+  
+    };
+ 
+    requestBackend(params).then((response) => {
+      SetDepartments(response.data);
+      //console.log(response)
+    });
+  }, []);
+
+
+
 
   const onSubmit = (formData: Employee) => {
     
@@ -75,6 +97,41 @@ const Form = () => {
               <div className="invalid-feedback d-block">
                 {errors.email?.message}
               </div>
+              </div>
+
+
+              
+
+ <div className="margin-bottom-30">
+              <label htmlFor="department" className='d-none'>Departamento</label>
+                <Controller
+                  name="department"
+                  rules={{ required: true }}
+                  control={control}
+                  
+                  render={({ field }) => (
+                    <Select 
+                    {...field}
+                      options={selectDepartments}
+                      classNamePrefix="product-crud-select"
+                      isMulti
+                      getOptionLabel={(department: Department) => department.name}
+                      getOptionValue={(department: Department) =>
+                        String(department.id)
+                      }
+                      inputId="department"
+                      placeholder="Departamento"
+
+                    />
+                  )}
+                />
+                {
+                  errors.department && (
+                    <div className="invalid-feedback d-block">
+                    Campo obrigatório
+                  </div>
+                  )
+                }
               </div>
 
     
