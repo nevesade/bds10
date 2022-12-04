@@ -1,3 +1,4 @@
+
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Form from "../Form";
@@ -54,7 +55,7 @@ describe('Employee form create tests', () => {
 
         await waitFor(() => {
             const messages = screen.getAllByText('Campo obrigatório');
-            expect(messages).toHaveLength(3);
+            expect(messages).toHaveLength(1);
         });
     });
 
@@ -90,15 +91,16 @@ describe('Employee form create tests', () => {
         userEvent.click(submitButton);
 
         await waitFor(() => {
+
             const messages = screen.getAllByText('Campo obrigatório');
-            expect(messages).toHaveLength(3);
+            expect(messages).toHaveLength(1);
         });
 
         const nameInput = screen.getByTestId("name");
         const emailInput = screen.getByTestId("email");
         const categoriesInput = screen.getByLabelText("Departamento");
 
-        await selectEvent.select(categoriesInput, 'Sales');
+        await selectEvent.select(categoriesInput, ['Sales']);
         userEvent.type(nameInput, 'Abel');
         userEvent.type(emailInput, 'abel@gmail.com');
 
