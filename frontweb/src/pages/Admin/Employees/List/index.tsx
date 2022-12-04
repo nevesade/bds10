@@ -10,18 +10,6 @@ import { Employee } from 'types/employee';
 import { SpringPage } from 'types/vendor/spring';
 import { hasAnyRoles } from 'util/auth';
 
-/* const employeeHardCode = {
-  // delete
-  id: 1,
-  name: 'Carlos',
-  email: 'carlos@gmail.com',
-  department: {
-    id: 1,
-    name: 'Sales',
-  },
-};
- */
-
 const List = () => {
   const [page, setPage] = useState<SpringPage<Employee>>();
 
@@ -60,10 +48,6 @@ const List = () => {
       {page?.content.map((employee) => (
         <EmployeeCard employee={employee} />
       ))}
-
-      {/*  <EmployeeCard employee={employeeHardCode} />
-      <EmployeeCard employee={employeeHardCode} />
-      <EmployeeCard employee={employeeHardCode} /> */}
 
       <Pagination
         forcePage={0}
