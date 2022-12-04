@@ -20,28 +20,31 @@ import { SpringPage } from 'types/vendor/spring';
   },
 };
  */
+
 const List = () => {
   const [page, setPage] = useState<SpringPage<Employee>>();
 
-  useEffect(() => {
+  const handlePageChange = (pageNumber: number) => {
     const params: AxiosRequestConfig = {
+      method: 'GET',
       url: '/employees',
       withCredentials: true,
       params: {
-        page: 0,
+        page: pageNumber,
         size: 4,
       },
     };
 
     requestBackend(params).then((response) => {
       setPage(response.data);
-      //console.log(response)
+      console.log(page);
     });
-  }, []);
-
-  const handlePageChange = (pageNumber: number) => {
-    // to do
   };
+
+  useEffect(() => {
+    handlePageChange(0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
@@ -61,7 +64,7 @@ const List = () => {
 
       <Pagination
         forcePage={0}
-        pageCount={1}
+        pageCount={page ? page.totalPages : 0}
         range={3}
         onChange={handlePageChange}
       />
