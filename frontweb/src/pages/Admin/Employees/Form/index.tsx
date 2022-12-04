@@ -3,9 +3,13 @@ import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import Select from 'react-select';
+import { select } from 'react-select-event';
+import { toast } from 'react-toastify';
 import { Department } from 'types/department';
 import { Employee } from 'types/employee';
+import { idText } from 'typescript';
 import { requestBackend } from 'util/requests';
+
 import './styles.css';
 
 const Form = () => {
@@ -22,9 +26,12 @@ const [selectDepartments, SetDepartments] = useState<Department[]>([]);
     handleSubmit,
     formState: { errors },
     control,
+    setValue,
+    getValues,
   } = useForm<Employee>();
 
   const history = useHistory();
+
 
   
   useEffect(() => {
@@ -44,9 +51,38 @@ const [selectDepartments, SetDepartments] = useState<Department[]>([]);
 
 
   const onSubmit = (formData: Employee) => {
+
+     const data = { ...formData,  "department": {
+      "id": 1
+  }  } 
+
+
+  console.log(data)
+
+    
+
+    const config: AxiosRequestConfig = {
+      method:  'POST',
+      url:  '/employees',
+      data: data, //or data,
+      withCredentials: true,
+    };
+
+    requestBackend(config)
+    .then((response) => {
+      toast.info('Cadastrado com sucesso');
+      history.push('/admin/employees');
+      console.log(response.data);
+    })
+    .catch(() => {
+      toast.error('Erro ao Guardar Produto')
+    })
+    ;
     
      
   };
+
+
 
   const handleCancel = () => {
     history.push('/admin/employees');
@@ -116,19 +152,21 @@ const [selectDepartments, SetDepartments] = useState<Department[]>([]);
                       classNamePrefix="product-crud-select"
                       isMulti
                       getOptionLabel={(department: Department) => department.name}
-                      getOptionValue={(department: Department) =>
-                        String(department.id)
+                      getOptionValue={(department: Department) =>String(department.id)
+
+                        
                       }
                       inputId="department"
                       placeholder="Departamento"
 
+                   
                     />
                   )}
                 />
                 {
                   errors.department && (
                     <div className="invalid-feedback d-block">
-                    Campo obrigatório
+                      Campo obrigatório
                   </div>
                   )
                 }
